@@ -106,6 +106,17 @@ public:
       camParam_ = aruco::CameraParameters();
     }
 
+    std::string refinementMethod_;
+    nh_.param<std::string>("corner_refinement", refinementMethod_, "LINES");
+    if ( refinementMethod_ == "SUBPIX" )
+      mDetector_.setCornerRefinementMethod(aruco::MarkerDetector::SUBPIX);
+    else if ( refinementMethod_ == "HARRIS" )
+      mDetector_.setCornerRefinementMethod(aruco::MarkerDetector::HARRIS);
+    else if ( refinementMethod_ == "NONE" )
+      mDetector_.setCornerRefinementMethod(aruco::MarkerDetector::NONE); 
+    else      
+      mDetector_.setCornerRefinementMethod(aruco::MarkerDetector::LINES);
+
     image_pub_ = it_.advertise("result", 1);
     debug_pub_ = it_.advertise("debug", 1);
     marker_pub_ = nh_.advertise<aruco_msgs::MarkerArray>("markers", 100);
